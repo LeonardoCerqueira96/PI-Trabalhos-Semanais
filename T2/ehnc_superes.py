@@ -9,7 +9,7 @@ import imageio
 # This function calculates the cumulative histogram for the image given and
 # returns it as a numpy array of type int
 def cumulative_histogram(image):
-    hist = np.zeros(255).astype(int)
+    hist = np.zeros(256).astype(int)
     for i in range(image.shape[0]):
         for j in range(image.shape[1]):
             hist[image[i, j]] += 1
