@@ -14,18 +14,20 @@ def cumulative_histogram(image):
         for j in range(image.shape[1]):
             hist[image[i, j]] += 1
     
+    for i in range(1, 256):
+        hist[i] += hist[i-1]
+
     return hist
 
 # This function returns an equalized version of the 'image', using the histogram
 # 'hist', and the total of pixels 'pixel_count' accounted for in the histogram
 def transfer_function(image, hist, pixel_count):
-    eq_img = (255.0 / pixel_count) * hist[image]
-    
+    eq_img = np.floor(255.0 * (hist[image] / pixel_count))
     return eq_img
 
 # This function returns the gamma adjusted version of 'image', using the 'gamma' parameter
 def gamma_adjustment(image, gamma):
-    adjt_img = np.floor(255 * ((image / 255.0) ** 1/gamma))
+    adjt_img = np.floor(255 * (np.power(image / 255.0, 1/gamma)))
 
     return adjt_img
 
@@ -102,7 +104,7 @@ elif (enh_method == 3):
 highres = superresolution(lowres1, lowres2, lowres3, lowres4)
 
 # Calculating the difference between highres and the reference image
-diff = rmse_error(ref_highres, highres)
+diff = rmse_error(ref_highres.astype(float), highres.astype(np.uint8))
 
 # Printing the difference factor
 print("%.4f" % diff)
